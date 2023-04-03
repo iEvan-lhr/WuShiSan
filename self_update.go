@@ -45,9 +45,12 @@ func (m *Monster) RegisterRouter() {
 				mission := tools.Ok(m.W.A.Load(key1))
 				tools.ReturnValue(fmt.Fprintf(writer, "%s", mission))
 				delete(m.W.E, key1)
-				if v, ok := m.Hold[m.master]; ok && v == 0 {
+				if v, ok := m.Hold[m.master]; ok && v == 1 {
 					m.Exit = append(m.Exit, m.master)
+					m.writeFile()
+					os.Exit(0)
 				}
+				m.Hold[m.master]--
 				m.writeFile()
 			})
 		}(key.(string))
@@ -107,13 +110,23 @@ func (m *Monster) writeFile() {
 }
 
 func (m *Monster) Update(mission chan *anything.Mission, data []any) {
-	time.Sleep(10 * time.Second)
-	tools.Error(json.Unmarshal(tools.ReturnValue(os.ReadFile("build")).([]byte), &m))
-	if len(m.Exit) > 0 {
-		if _, ok := m.Hold[m.Exit[0]]; !ok {
-			m.Run(m.Exit[0])
+	if data == nil {
+		time.Sleep(10 * time.Second)
+		tools.Error(json.Unmarshal(tools.ReturnValue(os.ReadFile("build")).([]byte), &m))
+		if len(m.Exit) > 0 {
+			if _, ok := m.Hold[m.Exit[0]]; !ok {
+				m.Run(m.Exit[0])
+			}
+		} else {
+			m.Update(nil, nil)
 		}
 	} else {
-		m.Update(nil, nil)
+		switch data[0].(string) {
+		case "Update One Model":
+			if _, ok := m.Hold[data[1].(string)]; !ok {
+				m.Hold[data[1].(string)] = 0
+				m.writeFile()
+			}
+		}
 	}
 }
