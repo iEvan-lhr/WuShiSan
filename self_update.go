@@ -117,34 +117,3 @@ func (m *Monster) Update(mission chan *anything.Mission, data []any) {
 		m.Update(nil, nil)
 	}
 }
-
-//newModel := "wushisan" + writePort + ".exe"
-//// 将文本写入文件
-//err =
-//if err != nil {
-//fmt.Println("Error writing file:", err)
-//return
-//}
-//fmt.Println("执行编译过程")
-//cmd := exec.Command("go", "build", "-o", newModel)
-//log.Println(cmd.String())
-//err = cmd.Run()
-//if err != nil {
-//fmt.Println("Error downloading code:", err)
-//os.Exit(1)
-//}
-//fmt.Println("启动新版本")
-//cmd = exec.Command(".\\" + newModel)
-//log.Println(cmd.String())
-//exit := 0
-//go func() {
-//	err = cmd.Run()
-//	if err != nil {
-//		fmt.Println("Error downloading code:", err)
-//		fmt.Println("waiting for next updating")
-//		exit = 1
-//	}
-//}()
-//if exit == 0 {
-//os.Exit(1)
-//}
